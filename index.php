@@ -24,7 +24,6 @@
 
     /* TODO:
         probably get all of this stuff off the index page and put into a separate function page.
-        confirm the foreign keys and CHECK != are all good in myfriends table
     */
 
     // Connect to database.
@@ -57,8 +56,9 @@
     }
 
     // If table is empty, populate.
-    // might need @mysqli_num_rows
-    if (mysqli_num_rows($resultFriends) == 0) {
+    $SQLstring = "SELECT * FROM $tableFriends";
+    $queryResult = @mysqli_query($connection, $SQLstring);
+    if (mysqli_num_rows($queryResult) == 0) {
         echo "<p>Adding default Friends table data</p>";
         $insertFriends = "INSERT INTO $tableFriends (friend_email, password, profile_name, date_started)
             VALUES ('sleve@email.com', 'pwsleve', 'Sleve McDichael', '2023-01-05'),
@@ -78,8 +78,9 @@
         } else {
             echo "<p>Error populating Friends table - " . mysqli_error($connection) . "</p>";
         }
+    } else {
+        echo "<p>Friends table has existing data.</p>";
     }
-
 
     // MY FRIENDS TABLE:
     // SQL query for the MyFriends table.
@@ -100,29 +101,14 @@
     }
 
     // If table is empty, populate.
-    // might need @mysqli_num_rows
-    if (mysqli_num_rows($resultMyFriends) == 0) {
+    $SQLstring = "SELECT * FROM $tableMyFriends";
+    $queryResult = @mysqli_query($connection, $SQLstring);
+    if (mysqli_num_rows($queryResult) == 0) {
         $insertMyFriends = "INSERT INTO $tableMyFriends (friend_id1, friend_id2)
-            VALUES (0,1),
-            (0,2),
-            (0,3),
-            (0,4),
-            (0,5),
-            (1,2),
-            (1,3),
-            (1,4),
-            (1,5),
-            (1,6),
-            (2,3),
-            (2,4),
-            (2,5),
-            (2,6),
-            (2,7),
-            (3,4),
-            (3,5),
-            (3,6),
-            (3,7),
-            (3,8)";
+            VALUES (1,2), (1,3), (1,4), (1,5), (1,6),
+            (2,3), (2,4), (2,5), (2,6), (2,7),
+            (3,4), (3,5), (3,6), (3,7), (3,8),
+            (4,5), (4,6), (4,7), (4,8), (4,9)";
 
         // Execute $insertMyFriends
         $resultInsertMyFriends = @mysqli_query($connection, $insertMyFriends);
@@ -131,6 +117,8 @@
         } else {
             echo "<p>Error populating MyFriends table - " . mysqli_error($connection) . "</p>";
         }
+    } else {
+        echo "<p>MyFriends table has existing data.</p>";
     }
 
     // close the database connection.
