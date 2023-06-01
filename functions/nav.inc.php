@@ -7,3 +7,5 @@
         <br>
         <a href="about.php">About</a>';
 ?>
+
+<!-- if session is set, show log out, else show log in. -->
