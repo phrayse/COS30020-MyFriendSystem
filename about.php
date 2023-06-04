@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="author" content="STUID" />
-    <link href="style.css" rel="stylesheet" />
-    <title>Assignment 3: About</title>
-</head>
-<body>
-<header>
-    <?php include ("functions/header.inc.php"); ?>
-</header>
-
+<?php include_once ("functions/header.inc.php"); ?>
 <main>
     <ol>
         <li><strong>What tasks have you completed or not completed?</strong>
@@ -44,11 +32,5 @@
 
     <a href="friendlist.php">Friend List</a>
     <br><a href="friendadd.php">Add Friends</a>
-    <br>
 </main>
-
-<footer>
-    <?php include ("functions/nav.inc.php"); ?>
-</footer>
-</body>
-</html>
+<?php include_once ("functions/nav.inc.php"); ?>
