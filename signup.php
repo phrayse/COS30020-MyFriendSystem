@@ -1,16 +1,17 @@
 <?php require ("functions/settings.inc.php");
 require ("functions/signup.class.php");
+require ("functions/accountmanager.class.php");
 require ("functions/db.class.php");
 include ("functions/sanitise.inc.php");
 ?>
-<!-- create database object, then pass it to signup object -->
-<?php $db = new DB(); $signup = new Signup($db); ?>
+<!-- create database object, then pass it to signup and accountManager objects -->
+<?php $db = new DB(); $signup = new Signup($db); $accountManager = new AccountManager($db); ?>
 <?php include_once ("functions/header.inc.php"); ?>
 <main>
-    <strong>Registration</strong>
+<strong>Registration</strong>
     <form action="signup.php" method="post">
-        <p><label>Email:<input type="email" name="email" autofocus required /></label>
-        <br><label>Profile Name:<input type="text" name="name" required /></label>
+        <p><label>Email:<input type="email" name="email" <?php echo isset($_POST["email"]) ? "value=\"" . $_POST["email"] . "\" " : ""; ?>autofocus required /></label>
+        <br><label>Profile Name:<input type="text" name="name" <?php echo isset($_POST["name"]) ? "value=\"" . $_POST["name"] . "\" " : ""; ?>required /></label>
         <br><label>Password:<input type="password" name="password" minlength="1" required /></label>
         <br><label>Confirm Password:<input type="password" name="confirmPassword" required /></label>
         <br><input type="submit" value="Register" />
@@ -37,17 +38,19 @@ include ("functions/sanitise.inc.php");
         if (!$signup->uniqueEmail($email)) {
             return;
         }
+        // Check whether profile name exists in the database
+        if (!$signup->uniqueUsername($name)) {
+            return;
+        }
         // email is unique, so register
         if (!$signup->register($email, $name, $password)) {
             return;
         }
         // registration successful, login
-        if (!$signup->login($email, $password)) {
+        if (!$accountManager->login($email, $password)) {
             return;
         }
-        // Login successful, set session variables.
-        $_SESSION["email"] = $email;
-        $_SESSION["name"] = $name;
+        header("location: friendadd.php");
     }
     ?>
 </main>

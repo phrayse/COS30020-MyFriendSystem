@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,4 +10,5 @@
 <body>
 <header>
     <h1>My Friend System<br>Assignment 3</h1>
+    <?php if(isset($_SESSION["name"])) { echo "Welcome back, " . $_SESSION["name"]; } ?>
 </header>

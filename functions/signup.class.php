@@ -2,7 +2,6 @@
 class Signup
 {
     private $db;
-    private $userID;
 
     // Create Signup object with passed in database object.
     public function __construct($db)
@@ -37,8 +36,23 @@ class Signup
         return true;
     }
 
+    public function uniqueUsername($name)
+    {
+        $connection = $this->db->getNewConnection();
+        $SQLstring = "SELECT * FROM friends WHERE profile_name = '$name'";
+        $result = $connection->query($SQLstring);
+        if ($result->num_rows > 0) {
+            $this->db->closeConnection();
+            echo "<p>Profile name already in use</p>";
+            return false;
+        }
+        $this->db->closeConnection();
+        return true;
+    }
+
     public function register($email, $name, $password)
     {
+        // right now this is chucking a plaintext password into the table, gotta encrypt it
         $connection = $this->db->getNewConnection();
         $date = date("Y-m-d");
         $SQLstring = "INSERT INTO friends (friend_email, password, profile_name, date_started)
@@ -49,26 +63,6 @@ class Signup
             return false;
         }
         $this->db->closeConnection();
-        return true;
-    }
-
-    public function login($email, $password)
-    {
-        // Details have been added successfully, so now grab the new records and log in
-        $connection = $this->db->getNewConnection();
-        $SQLstring = "SELECT friend_id FROM friends WHERE friend_email = '$email' AND password = '$password'";
-        $result = $connection->query($SQLstring);
-        if (!$result) {
-            $this->db->closeConnection();
-            echo "<p>Login failed</p>";
-            return false;
-        }
-        while ($row = mysqli_fetch_assoc($result)) {
-            $this->userID = $row["friend_id"];
-        }
-        
-        $this->db->closeConnection();
-        echo "<p>Login successful. User ID is $this->userID</p>";
         return true;
     }
 }

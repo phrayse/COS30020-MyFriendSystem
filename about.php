@@ -29,8 +29,5 @@
         </li>
         <li><strong>There were no conversations on the discussion board.</strong></li>
     </ol>
-
-    <a href="friendlist.php">Friend List</a>
-    <br><a href="friendadd.php">Add Friends</a>
 </main>
 <?php include_once ("functions/nav.inc.php"); ?>
