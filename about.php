@@ -1,9 +1,9 @@
-<?php include_once ("functions/header.inc.php"); ?>
+<?php include ("functions/header.inc.php"); ?>
 <main>
     <ol>
         <li><strong>What tasks have you completed or not completed?</strong>
             <ul>
-                <li></li>
+                <li>At this stage only the bonus tasks are not complete.</li>
             </ul>
         </li>
         <li><strong>What special features have you done, or attempted, in creating the site that we should know about?</strong>
@@ -30,4 +30,4 @@
         <li><strong>There were no conversations on the discussion board.</strong></li>
     </ol>
 </main>
-<?php include_once ("functions/nav.inc.php"); ?>
+<?php include ("functions/footer.inc.php"); ?>

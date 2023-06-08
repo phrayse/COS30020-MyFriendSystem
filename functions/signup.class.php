@@ -52,7 +52,7 @@ class Signup
 
     public function register($email, $name, $password)
     {
-        // right now this is chucking a plaintext password into the table, gotta encrypt it
+        // TODO: encrypt password
         $connection = $this->db->getNewConnection();
         $date = date("Y-m-d");
         $SQLstring = "INSERT INTO friends (friend_email, password, profile_name, date_started)

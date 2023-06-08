@@ -37,7 +37,7 @@ class DB
     public function closeConnection()
     {
         if ($this->connection) {
-            mysqli_close($this->connection);
+            $this->connection->close();
         }
     }
 

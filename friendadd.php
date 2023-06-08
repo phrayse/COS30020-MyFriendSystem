@@ -1,19 +1,18 @@
-<?php include ("functions/db.class.php");
-include ("functions/accountmanager.class.php");
-include ("functions/sanitise.inc.php");
+<?php include ("functions/handler.class.php");
 $db = new DB(); $accountManager = new AccountManager($db);
-include_once ("functions/header.inc.php"); ?>
+include ("functions/header.inc.php"); ?>
 <main>
     <?php
     if (isset($_SESSION["name"])) {
-        /*
-        need a list of all registered users, barring current friends.
-        need a button to add them to friend list, which will remove them from current list and update friend count
-        pagination too
-        */
+        $accountManager->getFriendCount();
+        $accountManager->displayEnemyTable();
+        if (isset($_POST["addFriend"])) {
+            $enemyID = $_POST["enemyID"];
+            $accountManager->addFriend($enemyID);
+        }
     } else {
-        // not logged in, show nothing.
+        echo "<p>You must be logged in to add friends</p>";
     }
     ?>
 </main>
-<?php include ("functions/nav.inc.php"); ?>
+<?php include ("functions/footer.inc.php"); ?>

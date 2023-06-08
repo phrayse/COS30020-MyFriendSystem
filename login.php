@@ -1,8 +1,6 @@
-<?php include ("functions/db.class.php");
-include ("functions/accountmanager.class.php");
-include ("functions/sanitise.inc.php");
+<?php include ("functions/handler.class.php");
 $db = new DB(); $accountManager = new AccountManager($db);
-include_once ("functions/header.inc.php"); ?>
+include ("functions/header.inc.php"); ?>
 <main>
     <?php
     // if session is set, we're already logged in.
@@ -18,16 +16,16 @@ include_once ("functions/header.inc.php"); ?>
     ?>
         <strong>Log in</strong>
         <form action="login.php" method="post">
-            <p><label>Email:<input type="email" name="email" <?php echo isset($_POST["email"]) ? "value=\"" . $_POST["email"] . "\" " : ""; ?>autofocus required /></label>
-            <br><label>Password:<input type="password" name="password" required /></label>
+            <p><label for="email">Email:<input type="email" id="email" name="email" <?php echo isset($_POST["email"]) ? "value=\"" . $_POST["email"] . "\" " : ""; ?>autofocus required /></label>
+            <br><label for="password">Password:<input type="password" id="password" name="password" required /></label>
             <br><input type="submit" value="Log in" />
             <input type="reset" value="Clear" />
             </p>
         </form>
     <?php
     } else {
-        echo "<p>You are already logged in!<br>";
+        echo "<p>You are already logged in!</p>";
     }
     ?>
 </main>
-<?php include ("functions/nav.inc.php"); ?>
+<?php include ("functions/footer.inc.php"); ?>

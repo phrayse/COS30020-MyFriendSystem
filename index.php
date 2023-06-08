@@ -1,5 +1,5 @@
-<?php require ("functions/db.class.php"); ?>
-<?php include_once ("functions/header.inc.php"); ?>
+<?php require ("functions/handler.class.php"); ?>
+<?php include ("functions/header.inc.php"); ?>
 <main>
     <p>Name: ##########
     <br>Email: #########@###
@@ -17,4 +17,4 @@
     }
     ?>
 </main>
-<?php include_once ("functions/nav.inc.php"); ?>
+<?php include ("functions/footer.inc.php"); ?>

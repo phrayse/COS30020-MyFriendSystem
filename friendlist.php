@@ -1,22 +1,18 @@
-<?php include ("functions/db.class.php");
-include ("functions/accountmanager.class.php");
-include ("functions/sanitise.inc.php");
+<?php include ("functions/handler.class.php");
 $db = new DB(); $accountManager = new AccountManager($db);
-include_once ("functions/header.inc.php"); ?>
+include ("functions/header.inc.php"); ?>
 <main>
     <?php
     if (isset($_SESSION["name"])) {
         $accountManager->getFriendCount();
         $accountManager->displayFriendTable();
-
         if (isset($_POST["unfriend"])) {
-            $friendID1 = $_POST["friendID1"];
-            $friendID2 = $_POST["friendID2"];
-            $accountManager->removeFriend($friendID1, $friendID2);
+            $friendID = $_POST["friendID"];
+            $accountManager->removeFriend($friendID);
         }
     } else {
-        // not logged in, show nothing.
+        echo "<p>You must be logged in to see your friends</p>";
     }
     ?>
 </main>
-<?php include ("functions/nav.inc.php"); ?>
+<?php include ("functions/footer.inc.php"); ?>
