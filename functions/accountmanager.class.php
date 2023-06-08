@@ -55,42 +55,28 @@ class AccountManager
         $connection = $this->db->getNewConnection();
         $id = $_SESSION["id"];
 
-        // gotta grab from myfriends table where either field matches ID
-        // from there, find each profile_id that matches and print the name.
-        $SQLstring = "SELECT * FROM myfriends WHERE (friend_id1 = '$id' OR friend_id2 = '$id')";
+        // For each record in the myfriends table for the current user, get the associated profile name of the other user.
+        $SQLstring =  "SELECT friends.friend_id, friends.profile_name
+                        FROM myfriends
+                        INNER JOIN friends ON (myfriends.friend_id1 = friends.friend_id OR myfriends.friend_id2 = friends.friend_id)
+                        WHERE (myfriends.friend_id1 = '$id' OR myfriends.friend_id2 = '$id') AND friends.friend_id != '$id'
+                        ORDER BY friends.profile_name ASC";
         $result = $connection->query($SQLstring);
         echo "<table border=\"2px\">";
         while ($row = mysqli_fetch_assoc($result)) {
-            $friendID1 = $row["friend_id1"];
-            $friendID2 = $row["friend_id2"];
-            $friendName1 = $this->getFriendName($friendID1);
-            $friendName2 = $this->getFriendName($friendID2);
-
-            if ($friendID1 == $_SESSION["id"]) {
-                echo "<tr><td>{$friendName2}</td>
-                <td>
-                    <form method=\"POST\"><input type=\"hidden\" name=\"friendID1\" value=\"{$friendID1}\">
-                        <input type=\"hidden\" name=\"friendID2\" value=\"{$friendID2}\">
+            $friendID = $row["friend_id"];
+            $friendName = $row["profile_name"];
+            echo "<tr><td>$friendName</td><td>
+                    <form method=\"POST\"><input type=\"hidden\" name=\"friendID1\" value=\"{$friendID}\">
+                        <input type=\"hidden\" name=\"friendID2\" value=\"{$id}\">
                         <button type=\"submit\" name=\"unfriend\" onclick=\"return confirm('Are you sure?')\">Unfriend</button>
                     </form>
                 </td></tr>";
-            }
-            if ($friendID2 == $_SESSION["id"]) {
-                echo "<tr><td>{$friendName1}</td>
-                <td>
-                    <form method=\"POST\"><input type=\"hidden\" name=\"friendID1\" value=\"{$friendID1}\">
-                        <input type=\"hidden\" name=\"friendID2\" value=\"{$friendID2}\">
-                        <button type=\"submit\" name=\"unfriend\" onclick=\"return confirm('Are you sure?')\">Unfriend</button>
-                    </form>
-                </td></tr>";
-            }
-
         }
         echo "</table>";
         $this->db->closeConnection();
     }
     
-
     public function removeFriend($friendID1, $friendID2)
     {
         $connection = $this->db->getNewConnection();
@@ -98,12 +84,13 @@ class AccountManager
         $result = $connection->query($SQLstring);
         if (!$result) {
             // failed to remove
-            return false;
+            echo "<p>Failed to remove connection.</p>";
+            exit();
         } else {
             // friendship removed
-            // p sure this is where I need to add an sql query that subtracts one from each user's num_of_friends value
-            // unless the problematic CREATE TRIGGER decrement_friends bit starts working
-            return true;
+            echo "<p>Friendship removed</p>";
+            header("refresh:0");
+            exit();
         }
     }
 }

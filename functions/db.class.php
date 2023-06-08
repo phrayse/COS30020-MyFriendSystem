@@ -75,18 +75,18 @@ class DB
                 SET num_of_friends = num_of_friends + 1
                 WHERE friend_id = NEW.friend_id2;
             END;
-/* works without this bit, might have to use an ALTER TABLE statement instead of lumping it all in here?
+
             CREATE TRIGGER decrement_friends AFTER DELETE ON myfriends FOR EACH ROW
             BEGIN
                 UPDATE friends
                 SET num_of_friends = num_of_friends - 1
-                WHERE friend_id = NEW.friend_id1;
+                WHERE friend_id = OLD.friend_id1;
 
                 UPDATE friends
                 SET num_of_friends = num_of_friends - 1
-                WHERE friend_id = NEW.friend_id2;
+                WHERE friend_id = OLD.friend_id2;
             END;
-*/
+
             INSERT INTO friends (friend_email, password, profile_name, date_started)
             VALUES ('sleve@email.com', 'pwsleve', 'Sleve McDichael', '2023-04-20'),
             ('onson@email.com', 'pwonson', 'Onson Sweemey', '2023-04-20'),
