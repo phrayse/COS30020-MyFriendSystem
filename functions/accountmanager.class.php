@@ -49,20 +49,20 @@ class AccountManager
         // Find all records on myfriends table that include user.
         // Print name of each friend with an unfriend button.
         $SQLstring =  "SELECT friends.friend_id, friends.profile_name
-                        FROM myfriends
-                        INNER JOIN friends ON (myfriends.friend_id1 = friends.friend_id OR myfriends.friend_id2 = friends.friend_id)
-                        WHERE (myfriends.friend_id1 = '$id' OR myfriends.friend_id2 = '$id') AND friends.friend_id != '$id'
-                        ORDER BY friends.profile_name ASC";
+            FROM myfriends
+            INNER JOIN friends ON (myfriends.friend_id1 = friends.friend_id OR myfriends.friend_id2 = friends.friend_id)
+            WHERE (myfriends.friend_id1 = '$id' OR myfriends.friend_id2 = '$id') AND friends.friend_id != '$id'
+            ORDER BY friends.profile_name ASC";
         $result = $connection->query($SQLstring);
         echo "<table border=\"2px\">";
         while ($row = $result->fetch_assoc()) {
             $friendName = $row["profile_name"];
             $friendID = $row["friend_id"];
             echo "<tr><td>$friendName</td><td>
-                    <form method=\"POST\"><input type=\"hidden\" name=\"friendID\" value=\"{$friendID}\">
-                        <input type=\"hidden\" name=\"user\" value=\"{$id}\">
-                        <button type=\"submit\" name=\"unfriend\" onclick=\"return confirm('Are you sure?')\">Unfriend</button>
-                    </form>
+                <form method=\"POST\"><input type=\"hidden\" name=\"friendID\" value=\"{$friendID}\">
+                    <input type=\"hidden\" name=\"user\" value=\"{$id}\">
+                    <button type=\"submit\" name=\"unfriend\" onclick=\"return confirm('Are you sure?')\">Unfriend</button>
+                </form>
                 </td></tr>";
         }
         echo "</table>";
@@ -89,29 +89,44 @@ class AccountManager
     public function displayEnemyTable() {
         $connection = $this->db->getNewConnection();
         $id = $_SESSION["id"];
-        // TODO:
-            // Pagination - the LIMIT 0,5 is the right start, but I think the 0 should be a variable that can increment by 5 each page
-            // Mutual friend count. sql hard.
+        $itemsPerPage = 5;
+        $currentPage = isset($_GET["page"]) ? $_GET["page"] : 1;
         $SQLstring =  "SELECT friends.friend_id, friends.profile_name
-                        FROM friends
-                        LEFT JOIN myfriends ON (myfriends.friend_id1 = friends.friend_id OR myfriends.friend_id2 = friends.friend_id)
-                            AND (myfriends.friend_id1 = '$id' OR myfriends.friend_id2 = '$id')
-                        WHERE myfriends.friend_id1 IS NULL AND myfriends.friend_id2 IS NULL AND friends.friend_id != '$id'
-                        ORDER BY friends.profile_name ASC
-                        LIMIT 0, 5";
-        $result = $connection->query($SQLstring);
+            FROM friends
+            LEFT JOIN myfriends ON (myfriends.friend_id1 = friends.friend_id OR myfriends.friend_id2 = friends.friend_id)
+                AND (myfriends.friend_id1 = '$id' OR myfriends.friend_id2 = '$id')
+            WHERE myfriends.friend_id1 IS NULL AND myfriends.friend_id2 IS NULL AND friends.friend_id != '$id'
+            ORDER BY friends.profile_name ASC";
+        $totalRows = $connection->query($SQLstring)->num_rows;
+        $totalPages = ceil($totalRows /  $itemsPerPage);
+        $offset = ($currentPage - 1) * $itemsPerPage;
+        $result = $connection->query("$SQLstring LIMIT $offset, $itemsPerPage");
+        
         echo "<table border=\"2px\">";
         while ($row = $result->fetch_assoc()) {
             $enemyName = $row["profile_name"];
             $enemyID = $row["friend_id"];
             echo "<tr><td>$enemyName</td><td>
-                    <form method=\"POST\"><input type=\"hidden\" name=\"enemyID\" value=\"{$enemyID}\">
-                        <input type=\"hidden\" name=\"user\" value=\"{$id}\">
-                        <button type=\"submit\" name=\"addFriend\" onclick=\"return confirm('Are you sure?')\">Add friend</button>
-                    </form>
+                <form method=\"POST\"><input type=\"hidden\" name=\"enemyID\" value=\"{$enemyID}\">
+                    <input type=\"hidden\" name=\"user\" value=\"{$id}\">
+                    <button type=\"submit\" name=\"addFriend\" onclick=\"return confirm('Are you sure?')\">Add friend</button>
+                </form>
                 </td></tr>";
         }
         echo "</table>";
+    
+        // Page numbers
+        echo "<p>Showing page $currentPage of $totalPages</p>";
+        // Previous link
+        if ($currentPage > 1) {
+            $previousPage = $currentPage - 1;
+            echo "<a href=\"?page=$previousPage\">Previous</a>";
+        }
+        // Next link
+        if ($currentPage < $totalPages) {
+            $nextPage = $currentPage + 1;
+            echo "<a href=\"?page=$nextPage\">Next</a>";
+        }
         $this->db->closeConnection();
     }
 
