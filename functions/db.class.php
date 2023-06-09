@@ -17,20 +17,15 @@ class DB
         $this->dbnm = $dbnm;
     }
 
-    // Set database
-    public function setConnection()
-    {
-        $this->connection = mysqli_connect($this->host, $this->user, $this->pswd, $this->dbnm);
-    }
     // Get database
     public function getConnection()
     {
         return $this->connection;
     }
     // Set & get database
-    public function getNewConnection()
+    public function setConnection()
     {
-        $this->setConnection();
+        $this->connection = mysqli_connect($this->host, $this->user, $this->pswd, $this->dbnm);
         return $this->connection;
     }
     // Close database
@@ -44,7 +39,7 @@ class DB
     // Index page function. Returns bool
     public function createDatabase()
     {
-        $this->setConnection();
+        $this->connection = mysqli_connect($this->host, $this->user, $this->pswd, $this->dbnm);
 
         // SQL to create both tables then populate
         $SQLstring = "CREATE TABLE IF NOT EXISTS friends (

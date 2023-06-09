@@ -3,7 +3,7 @@ require ("functions/handler.class.php");
 ?>
 <!-- create database object, then pass it to signup and accountManager objects -->
 <?php $db = new DB(); $signup = new Signup($db); $accountManager = new AccountManager($db); ?>
-<?php include_once ("functions/header.inc.php"); ?>
+<?php include ("functions/header.inc.php"); ?>
 <main>
     <strong>Registration</strong>
     <form action="signup.php" method="post">
@@ -64,4 +64,4 @@ require ("functions/handler.class.php");
     }
     ?>
 </main>
-<?php include_once ("functions/footer.inc.php"); ?>
+<?php include ("functions/footer.inc.php"); ?>

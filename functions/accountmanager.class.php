@@ -10,7 +10,7 @@ class AccountManager
 
     public function login($email, $password)
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $SQLstring = "SELECT friend_id, profile_name FROM friends WHERE friend_email = '$email' AND password = '$password'";
         $result = $connection->query($SQLstring);
         if (!$result || $result->num_rows == 0) {
@@ -32,7 +32,7 @@ class AccountManager
 
     public function getFriendCount()
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $id = $_SESSION["id"];
         $SQLstring = "SELECT * FROM myfriends WHERE friend_id1 = '$id' OR friend_id2 = '$id'";
         $result = $connection->query($SQLstring)->num_rows;
@@ -42,7 +42,7 @@ class AccountManager
 
     public function displayFriendTable()
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $id = $_SESSION["id"];
 
         // Find all records on myfriends table that include user.
@@ -70,7 +70,7 @@ class AccountManager
     
     public function removeFriend($friendID)
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $id = $_SESSION["id"];
         $SQLstring = "DELETE FROM myfriends where (friend_id1 = '$friendID' AND friend_id2 = '$id') OR (friend_id1 = '$id' AND friend_id2 = '$friendID')";
         $result = $connection->query($SQLstring);
@@ -86,7 +86,7 @@ class AccountManager
 
     public function getFriends($id)
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $friends = array();
         $SQLstring =  "SELECT friends.friend_id, friends.profile_name
             FROM myfriends
@@ -110,7 +110,7 @@ class AccountManager
 
     public function displayEnemyTable()
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $id = $_SESSION["id"];
         $itemsPerPage = 5;
         $currentPage = isset($_GET["page"]) ? $_GET["page"] : 1;
@@ -155,7 +155,7 @@ class AccountManager
 
     public function addFriend($enemyID)
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $id = $_SESSION["id"];
         $SQLstring = "INSERT INTO myfriends VALUES ($id, $enemyID)";
         $result = $connection->query($SQLstring);
