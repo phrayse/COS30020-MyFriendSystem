@@ -3,7 +3,7 @@
     <ol>
         <li><strong>What tasks have you completed or not completed?</strong>
             <ul>
-                <li>At this stage only the bonus tasks are not complete.</li>
+                <li>Everything has been completed, including bonus tasks.</li>
             </ul>
         </li>
         <li><strong>What special features have you done, or attempted, in creating the site that we should know about?</strong>

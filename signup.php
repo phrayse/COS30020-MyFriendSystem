@@ -1,6 +1,5 @@
 <?php
 require ("functions/handler.class.php");
-include ("functions/sanitise.inc.php");
 ?>
 <!-- create database object, then pass it to signup and accountManager objects -->
 <?php $db = new DB(); $signup = new Signup($db); $accountManager = new AccountManager($db); ?>

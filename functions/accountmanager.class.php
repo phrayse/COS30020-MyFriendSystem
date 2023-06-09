@@ -3,7 +3,6 @@ class AccountManager
 {
     private $db;
 
-    // Create Signup object with passed in database object.
     public function __construct($db)
     {
         $this->db = $db;
@@ -36,8 +35,8 @@ class AccountManager
         $connection = $this->db->getNewConnection();
         $id = $_SESSION["id"];
         $SQLstring = "SELECT * FROM myfriends WHERE friend_id1 = '$id' OR friend_id2 = '$id'";
-        $result = $connection->query($SQLstring);
-        echo $_SESSION["name"] . ", you have " . $result->num_rows . " friends";
+        $result = $connection->query($SQLstring)->num_rows;
+        echo "You have $result friend" . ($result == 1 ? "" : "s");
         $this->db->closeConnection();
     }
 
@@ -76,7 +75,6 @@ class AccountManager
         $SQLstring = "DELETE FROM myfriends where (friend_id1 = '$friendID' AND friend_id2 = '$id') OR (friend_id1 = '$id' AND friend_id2 = '$friendID')";
         $result = $connection->query($SQLstring);
         if (!$result) {
-            // failed to remove
             echo "<p>Failed to remove connection.</p>";
             exit();
         } else {
@@ -86,7 +84,32 @@ class AccountManager
         }
     }
 
-    public function displayEnemyTable() {
+    public function getFriends($id)
+    {
+        $connection = $this->db->getNewConnection();
+        $friends = array();
+        $SQLstring =  "SELECT friends.friend_id, friends.profile_name
+            FROM myfriends
+            INNER JOIN friends ON (myfriends.friend_id1 = friends.friend_id OR myfriends.friend_id2 = friends.friend_id)
+            WHERE (myfriends.friend_id1 = '$id' OR myfriends.friend_id2 = '$id') AND friends.friend_id != '$id'";
+        $result = $connection->query($SQLstring);
+        while ($row = $result->fetch_assoc()) {
+            array_push($friends, $row["friend_id"]);
+        }
+        $this->db->closeConnection();
+        return $friends;
+    }
+
+    public function getMutuals($enemyID)
+    {
+        $userFriends = $this->getFriends($_SESSION["id"]);
+        $enemyFriends = $this->getFriends($enemyID);
+        $mutuals = array_intersect($userFriends, $enemyFriends);
+        return count($mutuals);
+    }
+
+    public function displayEnemyTable()
+    {
         $connection = $this->db->getNewConnection();
         $id = $_SESSION["id"];
         $itemsPerPage = 5;
@@ -106,15 +129,16 @@ class AccountManager
         while ($row = $result->fetch_assoc()) {
             $enemyName = $row["profile_name"];
             $enemyID = $row["friend_id"];
-            echo "<tr><td>$enemyName</td><td>
-                <form method=\"POST\"><input type=\"hidden\" name=\"enemyID\" value=\"{$enemyID}\">
+            $mutualCount = $this->getMutuals($enemyID);
+            echo "<tr><td>$enemyName</td>
+                <td>You have $mutualCount mutual friend" . ($mutualCount == 1 ? "" : "s") . "</td>
+                <td><form method=\"POST\"><input type=\"hidden\" name=\"enemyID\" value=\"{$enemyID}\">
                     <input type=\"hidden\" name=\"user\" value=\"{$id}\">
                     <button type=\"submit\" name=\"addFriend\" onclick=\"return confirm('Are you sure?')\">Add friend</button>
-                </form>
-                </td></tr>";
+                </form></td></tr>";
         }
         echo "</table>";
-    
+ 
         // Page numbers
         echo "<p>Showing page $currentPage of $totalPages</p>";
         // Previous link
@@ -127,7 +151,6 @@ class AccountManager
             $nextPage = $currentPage + 1;
             echo "<a href=\"?page=$nextPage\">Next</a>";
         }
-        $this->db->closeConnection();
     }
 
     public function addFriend($enemyID)
@@ -137,7 +160,6 @@ class AccountManager
         $SQLstring = "INSERT INTO myfriends VALUES ($id, $enemyID)";
         $result = $connection->query($SQLstring);
         if (!$result) {
-            // failed to add friend
             echo "<p>Failed to create connection.</p>";
             exit();
         } else {

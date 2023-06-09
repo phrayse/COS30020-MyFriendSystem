@@ -1,4 +1,5 @@
-<?php include ("functions/handler.class.php");
+<?php
+include ("functions/handler.class.php");
 $db = new DB(); $accountManager = new AccountManager($db);
 include ("functions/header.inc.php"); ?>
 <main>
