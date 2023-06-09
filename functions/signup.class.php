@@ -24,7 +24,7 @@ class Signup
 
     public function uniqueEmail($email)
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $SQLstring = "SELECT * FROM friends WHERE friend_email = '$email'";
         $result = $connection->query($SQLstring);
         if ($result->num_rows > 0) {
@@ -38,7 +38,7 @@ class Signup
 
     public function uniqueUsername($name)
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $SQLstring = "SELECT * FROM friends WHERE profile_name = '$name'";
         $result = $connection->query($SQLstring);
         if ($result->num_rows > 0) {
@@ -52,7 +52,7 @@ class Signup
 
     public function register($email, $name, $password)
     {
-        $connection = $this->db->getNewConnection();
+        $connection = $this->db->setConnection();
         $date = date("Y-m-d");
         $SQLstring = "INSERT INTO friends (friend_email, password, profile_name, date_started)
             VALUES ('$email', '$password', '$name', '$date')";
