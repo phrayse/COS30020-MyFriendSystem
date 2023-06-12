@@ -2,4 +2,9 @@
 include "db.class.php";
 include "signup.class.php";
 include "accountmanager.class.php";
-include "sanitise.inc.php";
+function sanitise($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}

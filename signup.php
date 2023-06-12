@@ -5,6 +5,7 @@ require ("functions/handler.class.php");
 <?php $db = new DB(); $signup = new Signup($db); $accountManager = new AccountManager($db); ?>
 <?php include ("functions/header.inc.php"); ?>
 <main>
+    <!-- Signup form keeps data in the fields if an error happens  -->
     <strong>Registration</strong>
     <form action="signup.php" method="post">
         <p><label for="email">Email: <input type="email" id="email" name="email" <?php echo isset($_POST["email"]) ? "value=\"" . $_POST["email"] . "\" " : ""; ?>autofocus required /></label>
@@ -19,6 +20,7 @@ require ("functions/handler.class.php");
     <?php
     if (isset($_POST["email"]) && isset($_POST["name"]) && isset($_POST["password"])) {
         // Form data exists, do actions.
+        // $flag handles everything here - if $flag is ever set false, no further tests are needed.
         $flag = true;
         if ($_POST["password"] != $_POST["confirmPassword"]) {
             echo "<p>Passwords do not match</p>";
