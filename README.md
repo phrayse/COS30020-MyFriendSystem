@@ -1,6 +1,6 @@
 # COS30020 Advanced Web Development Assignment 3: System Development project 2
 ### My Friend System
-**Grade received: /100.**
+**Grade received: 98/100. (-2 for no CSS stylesheet)**
 
 For this assignment, you are to develop the My Friend System.  
 The system is a simplified social network application, and will make use of MySQL table creation, MySQL database access from PHP and PHP sessions.
